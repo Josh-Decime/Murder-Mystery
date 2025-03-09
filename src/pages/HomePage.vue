@@ -1,27 +1,77 @@
 <template>
-  <!-- <Example /> -->
-  <section>
-    <h1 v-for="character in characters">{{ character.name }}</h1>
+  <section class="container mt-4">
+    <h2>Round: {{ round }}</h2>
+    <h3>Deaths: {{ deaths }}</h3>
+
+    <div class="row g-3">
+      <div class="col-md-4" v-for="location in locations" :key="location.name">
+        <div class="location-box">
+          <h3>{{ location.name }}</h3>
+          <div v-for="character in location.characters" :key="character.id" class="character-box">
+            <img :src="character.img" class="character-img" />
+            <p>{{ character.name }} <span v-if="character.isDead">(Dead)</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary mt-3" @click="nextRound">Next Round</button>
+    <button class="btn btn-success mt-3" @click="resetGame">Restart Game</button>
   </section>
 </template>
 
 <script>
-// import Example from '@/components/Example.vue';
-import { AppState } from '../AppState.js';
-import { computed, ref, watch, onMounted } from 'vue';
+import { gameService } from "../services/gameService.js";
+import { AppState } from "../AppState.js";
+import { computed, onMounted } from "vue";
+
 export default {
   setup() {
-    const characters = computed(() => AppState.Characters)
+    const locations = computed(() => AppState.locations);
+    const round = computed(() => AppState.gameState.round);
+    const deaths = computed(() => AppState.gameState.deaths);
 
+    function resetGame() {
+      gameService.resetGame();
+    }
+
+    function nextRound() {
+      gameService.nextRound();
+    }
+
+    onMounted(() => {
+      resetGame();
+    });
 
     return {
-      characters,
-    }
+      locations,
+      round,
+      deaths,
+      nextRound,
+      resetGame
+    };
   }
-}
-
-
+};
 </script>
 
+<style scoped>
+.location-box {
+  border: 2px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f9f9f9;
+}
 
-<style scoped lang="scss"></style>
+.character-box {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.character-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+</style>
