@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { gameService } from "../services/gameService.js";
+import { gameService } from "../services/GameService.js";
 import { AppState } from "../AppState.js";
 import { computed, onMounted } from "vue";
 
@@ -31,16 +31,23 @@ export default {
     const round = computed(() => AppState.gameState.round);
     const deaths = computed(() => AppState.gameState.deaths);
 
+    /**
+     * Resets the game when the player clicks "Restart Game".
+     */
     function resetGame() {
       gameService.resetGame();
     }
 
+    /**
+     * Moves to the next round when the player clicks "Next Round".
+     */
     function nextRound() {
       gameService.nextRound();
     }
 
+    // Initialize game on first load
     onMounted(() => {
-      resetGame();
+      gameService.initializeGame();
     });
 
     return {
