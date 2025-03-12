@@ -1,6 +1,7 @@
 import { reactive } from "vue";
 import { Character } from "./models/Character.js";
 import { GameState } from "./models/GameState.js";
+import { Location } from "./models/Location.js";
 
 // NOTE AppState is a reactive object to contain app level data
 export const AppState = reactive({
@@ -11,7 +12,7 @@ export const AppState = reactive({
 
   gameState: new GameState(),
 
-  // Predefined characters (AppState should hold character data)
+  // Predefined characters
   characters: [
     new Character({ name: "Mr. Glope" }),
     new Character({ name: "Miss Scarlet" }),
@@ -19,9 +20,23 @@ export const AppState = reactive({
     new Character({ name: "Colonel Mustard" })
   ],
 
-  locations: [], // Locations will be generated dynamically
+  // ✅ Predefined locations (Only a subset will be used per game)
+  allLocations: [
+    new Location("Library"),
+    new Location("Kitchen"),
+    new Location("Ballroom"),
+    new Location("Study"),
+    new Location("Hall"),
+    new Location("Conservatory"),
+    new Location("Lounge"),
+    new Location("Dining Room"),
+    new Location("Billiard Room"),
+    new Location("Cellar")
+  ],
 
-  // Game tracking variables (AppState should hold state, not logic)
+  locations: [], // Selected locations for this game
+
+  // Game tracking variables
   leaderboard: [],
   round: 1,
   deaths: 0,
