@@ -17,7 +17,11 @@ export const AppState = reactive({
     new Character({ name: "Mr. Glope" }),
     new Character({ name: "Miss Scarlet" }),
     new Character({ name: "Professor Plum" }),
-    new Character({ name: "Colonel Mustard" })
+    new Character({ name: "Colonel Mustard" }),
+    new Character({ name: "Florpentine" }),
+    new Character({ name: "Captain Sun" }),
+    new Character({ name: "Mr Labalaba" }),
+    new Character({ name: "Mr Bobostic" }),
   ],
 
   // ✅ Predefined locations (Only a subset will be used per game)

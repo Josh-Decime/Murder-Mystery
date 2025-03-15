@@ -110,6 +110,44 @@ class GameService {
         this.initializeGame(AppState.locations.length);
     }
 
+    /**
+    * Allows the player to accuse a character.
+    * - Works for both typing a name and clicking a character.
+    * - If correct, the player wins and UI updates.
+    * - If incorrect, the game continues to the next round.
+    */
+    accuseMurderer(input) {
+        console.log("Accusation received:", input); // ✅ Debugging log
+
+        const suspect = AppState.characters.find(char =>
+            char.name.toLowerCase() === input.toLowerCase() || String(char.id) === String(input)
+        );
+
+        if (!suspect) {
+            window.alert("That character doesn't exist. Try again!");
+            console.warn("❌ No matching character found for:", input);
+            return;
+        }
+
+        if (suspect.isMurderer) {
+            window.alert(`You got them! ${suspect.name} was the murderer! 🎉`);
+            AppState.gameState.gameOver = true;
+
+            // ✅ Store the final game summary
+            AppState.gameState.finalMessage = `${suspect.name} killed ${AppState.gameState.deaths} people, in ${AppState.gameState.round} rounds, before they were caught.`;
+        } else {
+            window.alert(`Wrong guess! ${suspect.name} was innocent. Another round begins.`);
+            this.nextRound(); // ✅ Wrong guess triggers the next round
+        }
+    }
+
+
+
+
+
+
+
+
 }
 
 export const gameService = new GameService();
