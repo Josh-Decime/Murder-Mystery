@@ -9,6 +9,10 @@ class GameService {
       * - Choosing a murderer.
       */
     initializeGame(locationsCount = 4) {
+        if (AppState.characters.length > 0 && AppState.locations.length > 0) {
+            console.warn("Game is already initialized. Skipping re-initialization.");
+            return;
+        }
         // ✅ Select a new set of locations WITHOUT duplicating them
         AppState.locations = this.getRandomLocations(locationsCount);
 
@@ -96,28 +100,35 @@ class GameService {
 
 
     /**
-    * Resets the game and starts a new session.
-    * - Clears previous assignments without duplicating characters or locations.
-    * - Keeps the original characters and location list intact.
-    */
+     * Resets the game and starts fresh.
+     * - Ensures full reinitialization even if the game was already initialized.
+     */
     resetGame() {
-        // ✅ Clear locations but do NOT add duplicates
-        AppState.locations.forEach(location => {
-            location.characters = [];
+        console.log("Resetting game...");
+
+        // ✅ Clear all locations and characters
+        AppState.locations = [];
+        AppState.characters.forEach(character => {
+            character.isDead = false;
+            character.currentLocation = null;
+            character.isMurderer = false;
         });
 
-        // ✅ Restart the game with a fresh setup
-        this.initializeGame(AppState.locations.length);
+        // ✅ Force reinitialize the game
+        this.initializeGame(4); // Change 4 to the default number of locations you want
+
+        console.log("Game has been reset.");
     }
 
+
     /**
-    * Allows the player to accuse a character.
-    * - Works for both typing a name and clicking a character.
-    * - If correct, the player wins and UI updates.
-    * - If incorrect, the game continues to the next round.
-    */
+  * Allows the player to accuse a character.
+  * - Works for both typing a name and clicking a character.
+  * - If correct, the player wins and UI updates.
+  * - If incorrect, the game continues to the next round.
+  */
     accuseMurderer(input) {
-        console.log("Accusation received:", input); // ✅ Debugging log
+        console.log("Accusation received:", input);
 
         const suspect = AppState.characters.find(char =>
             char.name.toLowerCase() === input.toLowerCase() || String(char.id) === String(input)
@@ -125,7 +136,6 @@ class GameService {
 
         if (!suspect) {
             window.alert("That character doesn't exist. Try again!");
-            console.warn("❌ No matching character found for:", input);
             return;
         }
 
@@ -135,11 +145,24 @@ class GameService {
 
             // ✅ Store the final game summary
             AppState.gameState.finalMessage = `${suspect.name} killed ${AppState.gameState.deaths} people, in ${AppState.gameState.round} rounds, before they were caught.`;
+
+            // ✅ Save to local leaderboard
+            const newEntry = {
+                murderer: suspect.name,
+                deaths: AppState.gameState.deaths,
+                rounds: AppState.gameState.round
+            };
+
+            let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+            leaderboard.push(newEntry);
+            leaderboard.sort((a, b) => a.deaths - b.deaths || a.rounds - b.rounds); // ✅ Sort by least deaths, then rounds
+            localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
         } else {
             window.alert(`Wrong guess! ${suspect.name} was innocent. Another round begins.`);
-            this.nextRound(); // ✅ Wrong guess triggers the next round
+            this.nextRound();
         }
     }
+
 
 
 

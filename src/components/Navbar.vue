@@ -9,10 +9,10 @@ function toggleTheme() {
   theme.value = theme.value == 'light' ? 'dark' : 'light'
 }
 
-watch(theme,()=> {
+watch(theme, () => {
   document.documentElement.setAttribute('data-bs-theme', theme.value)
   saveState('theme', theme.value)
-}, {immediate: true})
+}, { immediate: true })
 
 </script>
 
@@ -36,13 +36,19 @@ watch(theme,()=> {
               About
             </router-link>
           </li>
+          <li>
+            <router-link :to="{ name: 'Leaderboard' }" class="btn text-green selectable">
+              Leaderboard
+            </router-link>
+          </li>
         </ul>
+
         <!-- LOGIN COMPONENT HERE -->
-         <div class="ms-auto">
-           <button class="btn text-light" @click="toggleTheme"
-           :title="`Enable ${theme == 'light' ? 'dark' : 'light'} theme.`">
-           <i v-if="theme == 'dark'" class="mdi mdi-weather-sunny"></i>
-           <i v-if="theme == 'light'" class="mdi mdi-weather-night"></i>
+        <div class="ms-auto">
+          <button class="btn text-light" @click="toggleTheme"
+            :title="`Enable ${theme == 'light' ? 'dark' : 'light'} theme.`">
+            <i v-if="theme == 'dark'" class="mdi mdi-weather-sunny"></i>
+            <i v-if="theme == 'light'" class="mdi mdi-weather-night"></i>
           </button>
         </div>
         <Login />
@@ -50,6 +56,7 @@ watch(theme,()=> {
     </div>
   </nav>
 </template>
+
 
 <style lang="scss" scoped>
 a {

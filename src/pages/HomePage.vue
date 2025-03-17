@@ -26,6 +26,7 @@
     <button v-if="!gameOver" class="btn btn-primary mt-3" @click="nextRound">Next Round</button>
     <button v-if="!gameOver" class="btn btn-danger mt-3" @click="guessMurderer">Guess the Murderer (Type Name)</button>
     <button class="btn btn-success mt-3" @click="resetGame">{{ restartButtonText }}</button>
+
   </section>
 </template>
 
